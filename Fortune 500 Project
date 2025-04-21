@@ -1,0 +1,42 @@
+For this project, I looked at the data and considered the following questions:
+
+--1. Which industries offer the most generous maternity leave policies on average?
+--2. Is there a correlation between paid time off days and average employee tenure?
+--3. Do companies that provide healthcare benefits have higher average employee tenure than those that don’t?
+--4. What is the average revenue per employee for each company, and which company is the most efficient by that measure?
+--5. Which companies in the dataset offer above-average benefits in both maternity leave and paid time off?
+
+SELECT industry, ROUND(AVG(maternity_leave_weeks),2) AS maternity_leave_average
+FROM fortune_companies
+GROUP BY industry
+HAVING maternity_leave_average > 8
+;
+
+SELECT company_name, paid_time_off_days, avg_employee_tenure
+FROM fortune_companies
+WHERE paid_time_off_days > 10
+  AND avg_employee_tenure > 5
+ORDER BY avg_employee_tenure asc
+;
+
+SELECT company_name, avg_employee_tenure,
+CASE WHEN healthcare_benefits > 0 THEN 'Coverage Provided'
+ELSE 'No Coverage'
+END AS "Health Benefits"
+FROM fortune_companies
+ORDER BY avg_employee_tenure
+;
+
+SELECT company_name, employees, ROUND (revenue/employees,4) AS average_revenue_per_employee
+FROM fortune_companies
+ORDER BY average_revenue_per_employee
+;
+
+SELECT company_name, maternity_leave_weeks, paid_time_off_days,
+CASE WHEN maternity_leave_weeks > 12 AND paid_time_off_days > 20 THEN 'Generous'
+WHEN maternity_leave_weeks > 6 AND paid_time_off_days > 10 THEN 'Moderate'
+ELSE 'Limited Time Offered'
+END AS time_off_category
+FROM fortune_companies
+ORDER BY time_off_category
+;
